@@ -25,3 +25,9 @@ const attendanceRoutes = require("./routes/attendance.routes");
 app.use("/api/events", eventRoutes);
 app.use("/api/registrations", registrationRoutes);
 app.use("/api/attendance", attendanceRoutes);
+
+const dashboardRoutes = require("./routes/dashboard.routes");
+app.use("/api/dashboard", dashboardRoutes);
+
+const exportRoutes = require("./routes/export.routes");
+app.use("/api/export", exportRoutes);
