@@ -4,10 +4,6 @@ import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-<div className="bg-red-500 text-white p-6 text-2xl">
-  Tailwind Test
-</div>
-
 
 export default function Login() {
     const [email, setEmail] = useState("");
