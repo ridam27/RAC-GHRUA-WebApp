@@ -4,14 +4,33 @@ const pool = require("../config/db");
  * ASST_ADMIN: View Registered Users
  */
 exports.getRegisteredUsers = async (req, res) => {
-    const result = await pool.query(
-        `SELECT u.id, u.name, u.email
-     FROM registrations r
-     JOIN users u ON u.id = r.user_id
-     WHERE r.event_id=$1`,
-        [req.params.eventId]
-    );
-    res.json(result.rows);
+    try {
+        const { eventId } = req.params;
+
+        const result = await pool.query(
+            `
+      SELECT
+        u.id,
+        u.name,
+        u.email,
+        COALESCE(a.present, false) AS present
+      FROM registrations r
+      JOIN users u
+        ON u.id = r.user_id
+      LEFT JOIN attendance a
+        ON a.user_id = u.id
+       AND a.event_id = r.event_id
+      WHERE r.event_id = $1
+      ORDER BY u.name
+      `,
+            [eventId]
+        );
+
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to load attendance" });
+    }
 };
 
 /**

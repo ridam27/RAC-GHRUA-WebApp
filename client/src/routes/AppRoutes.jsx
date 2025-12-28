@@ -1,0 +1,85 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "../pages/Login";
+import ProtectedRoute from "../components/ProtectedRoute";
+import MemberDashboard from "../pages/MemberDashboard";
+import AsstAdminDashboard from "../pages/AsstAdminDashboard";
+import AdminDashboard from "../pages/AdminDashboard";
+import Events from "../pages/Events";
+import EventDetails from "../pages/EventDetails";
+import AsstAdminEvents from "../pages/AsstAdminEvents";
+import Attendance from "../pages/Attendance";
+
+
+export default function AppRoutes() {
+    return (
+        <Routes>
+            <Route path="/login" element={<Login />} />
+
+            <Route
+                path="/dashboard/member"
+                element={
+                    <ProtectedRoute roles={["MEMBER"]}>
+                        <MemberDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/dashboard/asst-admin"
+                element={
+                    <ProtectedRoute roles={["ASST_ADMIN", "ADMIN"]}>
+                        <AsstAdminDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/dashboard/admin"
+                element={
+                    <ProtectedRoute roles={["ADMIN"]}>
+                        <AdminDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route path="*" element={<Navigate to="/login" />} />
+
+            <Route
+                path="/events"
+                element={
+                    <ProtectedRoute roles={["MEMBER", "ASST_ADMIN", "ADMIN"]}>
+                        <Events />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/events/:id"
+                element={
+                    <ProtectedRoute roles={["MEMBER", "ASST_ADMIN", "ADMIN"]}>
+                        <EventDetails />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/asst-admin"
+                element={
+                    <ProtectedRoute roles={["ASST_ADMIN", "ADMIN"]}>
+                        <AsstAdminEvents />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/asst-admin/events/:id"
+                element={
+                    <ProtectedRoute roles={["ASST_ADMIN", "ADMIN"]}>
+                        <Attendance />
+                    </ProtectedRoute>
+                }
+            />
+
+        </Routes>
+    );
+}
