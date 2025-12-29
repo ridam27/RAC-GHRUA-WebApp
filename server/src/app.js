@@ -37,3 +37,6 @@ app.use("/api/admin", adminUsersRoutes);
 
 const profileRoutes = require("./routes/profile.routes");
 app.use("/api/profile", profileRoutes);
+
+const eventHistoryRoutes = require("./routes/eventHistory.routes");
+app.use("/api/event-history", eventHistoryRoutes);

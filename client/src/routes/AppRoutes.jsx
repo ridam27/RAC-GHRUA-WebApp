@@ -10,7 +10,7 @@ import AsstAdminEvents from "../pages/AsstAdminEvents";
 import Attendance from "../pages/Attendance";
 import AdminMembers from "../pages/AdminMembers";
 import Profile from "../pages/Profile";
-
+import EventHistory from "../pages/EventHistory";
 
 
 export default function AppRoutes() {
@@ -100,6 +100,16 @@ export default function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+
+            <Route
+                path="/event-history"
+                element={
+                    <ProtectedRoute roles={["ADMIN", "ASST_ADMIN"]}>
+                        <EventHistory />
+                    </ProtectedRoute>
+                }
+            />
+
 
         </Routes>
     );

@@ -25,6 +25,13 @@ export default function Navbar() {
                     Events
                 </Link>
 
+                {["ADMIN", "ASST_ADMIN"].includes(user?.system_role) && (
+                    <Link to="/event-history" className="hover:underline">
+                        Event History
+                    </Link>
+                )}
+
+
                 {user?.system_role === "ASST_ADMIN" && (
                     <Link to="/asst-admin" className="hover:underline">
                         Manage Events
@@ -38,7 +45,7 @@ export default function Navbar() {
                 )}
 
                 <Link to="/profile" className="hover:underline">
-                        {user?.name} | {user?.system_role}
+                    {user?.name} | {user?.system_role}
                 </Link>
 
                 <span
