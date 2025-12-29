@@ -8,6 +8,9 @@ import Events from "../pages/Events";
 import EventDetails from "../pages/EventDetails";
 import AsstAdminEvents from "../pages/AsstAdminEvents";
 import Attendance from "../pages/Attendance";
+import AdminMembers from "../pages/AdminMembers";
+import Profile from "../pages/Profile";
+
 
 
 export default function AppRoutes() {
@@ -76,6 +79,24 @@ export default function AppRoutes() {
                 element={
                     <ProtectedRoute roles={["ASST_ADMIN", "ADMIN"]}>
                         <Attendance />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/users"
+                element={
+                    <ProtectedRoute roles={["ADMIN"]}>
+                        <AdminMembers />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute roles={["MEMBER", "ASST_ADMIN", "ADMIN"]}>
+                        <Profile />
                     </ProtectedRoute>
                 }
             />

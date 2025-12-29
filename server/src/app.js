@@ -31,3 +31,9 @@ app.use("/api/dashboard", dashboardRoutes);
 
 const exportRoutes = require("./routes/export.routes");
 app.use("/api/export", exportRoutes);
+
+const adminUsersRoutes = require("./routes/admin.users.routes");
+app.use("/api/admin", adminUsersRoutes);
+
+const profileRoutes = require("./routes/profile.routes");
+app.use("/api/profile", profileRoutes);

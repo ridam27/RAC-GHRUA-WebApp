@@ -32,14 +32,14 @@ export default function Navbar() {
                 )}
 
                 {user?.system_role === "ADMIN" && (
-                    <Link to="/admin" className="hover:underline">
+                    <Link to="/admin/users" className="hover:underline">
                         Admin Panel
                     </Link>
                 )}
 
-                <span>
-                    {user?.name} | {user?.system_role}
-                </span>
+                <Link to="/profile" className="hover:underline">
+                        {user?.name} | {user?.system_role}
+                </Link>
 
                 <span
                     className={`text-xs px-2 py-1 rounded ${user?.club_fee_status === "PAID"
