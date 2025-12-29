@@ -12,8 +12,7 @@ A full-stack web application to manage members, events, attendance, and certific
 - [Setup Instructions](#setup-instructions)  
 - [Environment Variables](#environment-variables)  
 - [Backend API Routes](#backend-api-routes)  
-- [Frontend Routes](#frontend-routes)  
-- [Screenshots](#screenshots)  
+- [Frontend Routes](#frontend-routes)
 - [License](#license)  
 
 ---
@@ -96,6 +95,7 @@ A full-stack web application to manage members, events, attendance, and certific
 ---
 
 ## Folder Structure
+```
 rac-ghrua-app/
 ├─ client/
 │ ├─ src/
@@ -113,7 +113,7 @@ rac-ghrua-app/
 │ ├─ app.js
 │ └─ package.json
 └─ README.md
-
+```
 
 ---
 
