@@ -126,7 +126,7 @@ export default function EventHistory() {
 
                     <tbody>
                         {events.map((e, i) => (
-                            <tr key={e.id} className="border-b">
+                            <tr key={e.id} className="border-b text-center">
                                 <td className="p-2 text-center">{i + 1}</td>
                                 <td className="p-2">{e.event_date}</td>
                                 <td className="p-2">{e.title}</td>
