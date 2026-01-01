@@ -8,23 +8,19 @@ export default function Events() {
     const [events, setEvents] = useState([]);
     const navigate = useNavigate();
 
+    const loadEvents = async () => {
+        const res = await getEvents();
+        setEvents(res.data);
+    };
+
     useEffect(() => {
-        getEvents().then((res) => setEvents(res.data));
+        loadEvents();
     }, []);
-
-    const handleIn = async (id) => {
-        await registerIn(id);
-        toast.success("Registered");
-    };
-
-    const handleOut = async (id) => {
-        await registerOut(id);
-        toast.success("Unregistered");
-    };
 
     return (
         <>
             <Navbar />
+
             <div className="p-6">
                 <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
 
@@ -32,23 +28,64 @@ export default function Events() {
                     {events.map((e) => (
                         <div
                             key={e.id}
-                            className="bg-white p-4 rounded shadow flex justify-between"
+                            className="bg-white p-4 rounded shadow flex justify-between items-center"
                         >
-                            <div onClick={() => navigate(`/events/${e.id}`)}>
-                                <h3 className="font-semibold">{e.title}</h3>
-                                <p className="text-sm text-gray-500">{e.date}</p>
+                            {/* Event Title + Status */}
+                            <div
+                                onClick={() => navigate(`/events/${e.id}`)}
+                                className="cursor-pointer"
+                            >
+                                <h3 className="font-semibold flex items-center gap-2">
+                                    {e.title}
+
+                                    <span
+                                        className={`text-xs px-2 py-0.5 rounded ${
+                                            e.is_registered
+                                                ? "bg-green-500 text-white"
+                                                : "bg-gray-300 text-black"
+                                        }`}
+                                    >
+                                        {e.is_registered
+                                            ? "Registered"
+                                            : "Not Registered"}
+                                    </span>
+                                </h3>
+
+                                <p className="text-sm text-gray-500">
+                                    {e.event_date}
+                                </p>
                             </div>
 
+                            {/* Buttons */}
                             <div className="flex gap-2">
                                 <button
-                                    onClick={() => handleIn(e.id)}
-                                    className="bg-green-500 text-white px-3 py-1 rounded"
+                                    disabled={e.is_registered}
+                                    onClick={async () => {
+                                        await registerIn(e.id);
+                                        toast.success("Registered");
+                                        loadEvents();
+                                    }}
+                                    className={`px-3 py-1 rounded text-white ${
+                                        e.is_registered
+                                            ? "bg-gray-400 cursor-not-allowed"
+                                            : "bg-green-600 hover:bg-green-700"
+                                    }`}
                                 >
                                     I’m In
                                 </button>
+
                                 <button
-                                    onClick={() => handleOut(e.id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded"
+                                    disabled={!e.is_registered}
+                                    onClick={async () => {
+                                        await registerOut(e.id);
+                                        toast.success("Unregistered");
+                                        loadEvents();
+                                    }}
+                                    className={`px-3 py-1 rounded text-white ${
+                                        !e.is_registered
+                                            ? "bg-gray-400 cursor-not-allowed"
+                                            : "bg-red-600 hover:bg-red-700"
+                                    }`}
                                 >
                                     I’m Out
                                 </button>

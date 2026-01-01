@@ -12,6 +12,7 @@ exports.getEventHistory = async (req, res) => {
             id,
             title,
             event_date::text AS event_date,
+            status,
             certificate_status
         FROM events
         WHERE 1=1
@@ -45,6 +46,7 @@ exports.exportEventHistory = async (req, res) => {
         SELECT
             title,
             event_date::text AS event_date,
+            status,
             certificate_status
         FROM events
         WHERE 1=1
@@ -73,6 +75,7 @@ exports.exportEventHistory = async (req, res) => {
         { header: "Sr. No.", key: "sr", width: 8 },
         { header: "Event Date", key: "event_date", width: 15 },
         { header: "Event Name", key: "title", width: 30 },
+        { header: "Event Status", key: "status", width: 20 },
         { header: "Certificate Status", key: "certificate_status", width: 20 }
     ];
 
@@ -81,6 +84,7 @@ exports.exportEventHistory = async (req, res) => {
             sr: index + 1,
             event_date: row.event_date,
             title: row.title,
+            status: row.status,
             certificate_status: row.certificate_status
         });
     });

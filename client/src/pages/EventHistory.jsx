@@ -119,6 +119,7 @@ export default function EventHistory() {
                             <th className="p-2">Sr. No.</th>
                             <th className="p-2">Event Date</th>
                             <th className="p-2">Event Name</th>
+                            <th className="p-2">Status</th>
                             <th className="p-2">Certificate</th>
                             <th className="p-2">Action</th>
                         </tr>
@@ -127,27 +128,46 @@ export default function EventHistory() {
                     <tbody>
                         {events.map((e, i) => (
                             <tr key={e.id} className="border-b text-center">
-                                <td className="p-2 text-center">{i + 1}</td>
+                                <td className="p-2">{i + 1}</td>
                                 <td className="p-2">{e.event_date}</td>
                                 <td className="p-2">{e.title}</td>
 
+                                {/* STATUS */}
+                                <td className="p-2">
+                                    <span
+                                        className={`px-2 py-1 rounded text-xs font-medium ${
+                                            e.status === "COMPLETED"
+                                                ? "bg-green-100 text-green-700"
+                                                : "bg-yellow-100 text-yellow-700"
+                                        }`}
+                                    >
+                                        {e.status}
+                                    </span>
+                                </td>
+
+                                {/* CERTIFICATE */}
                                 <td className="p-2">
                                     <button
                                         onClick={() => toggleCertificate(e.id)}
-                                        className={`px-3 py-1 rounded text-xs text-white ${e.certificate_status === "RECEIVED"
+                                        className={`px-3 py-1 rounded text-xs text-white ${
+                                            e.certificate_status === "RECEIVED"
                                                 ? "bg-green-600"
                                                 : "bg-red-600"
-                                            }`}
+                                        }`}
                                     >
                                         {e.certificate_status}
                                     </button>
                                 </td>
 
+                                {/* SAVE */}
                                 <td className="p-2">
                                     <button
                                         type="button"
                                         onClick={() =>
-                                            saveCertificateStatus(e.id, e.certificate_status)
+                                            saveCertificateStatus(
+                                                e.id,
+                                                e.certificate_status
+                                            )
                                         }
                                         disabled={savingId === e.id}
                                         className="bg-blue-600 text-white px-3 py-1 rounded text-xs"
