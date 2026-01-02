@@ -1,10 +1,8 @@
 const pool = require("../config/db");
-const { sendEmail } = require("../utils/mailer");
 
 /**
  * ASST_ADMIN / ADMIN
  * Create Event
- * Email → All MEMBERS
  */
 exports.createEvent = async (req, res) => {
     const { title, description, event_date } = req.body;
@@ -12,28 +10,14 @@ exports.createEvent = async (req, res) => {
     try {
         const result = await pool.query(
             `
-            INSERT INTO events (title, description, event_date, created_by)
-            VALUES ($1, $2, $3, $4)
-            RETURNING *
-            `,
+      INSERT INTO events (title, description, event_date, created_by)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+      `,
             [title, description, event_date, req.user.id]
         );
 
-        // Notify all members
-        const members = await pool.query(
-            "SELECT email FROM users WHERE system_role = 'MEMBER'"
-        );
-
-        for (const member of members.rows) {
-            await sendEmail(
-                member.email,
-                "New Rotaract Event Added",
-                `
-                <p><strong>${title}</strong> has been added.</p>
-                <p>Please login to the RAC GHRUA portal to view details.</p>
-                `
-            );
-        }
+        // Emails removed
 
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -44,26 +28,22 @@ exports.createEvent = async (req, res) => {
 
 /**
  * ALL USERS
- * Upcoming Events
- * Includes is_registered flag
+ * Upcoming Events (with registration status)
  */
 exports.getUpcomingEvents = async (req, res) => {
     try {
         const result = await pool.query(
             `
-            SELECT 
-                e.*,
-                CASE 
-                    WHEN r.user_id IS NULL THEN false
-                    ELSE true
-                END AS is_registered
-            FROM events e
-            LEFT JOIN registrations r
-                ON r.event_id = e.id
-                AND r.user_id = $1
-            WHERE e.status = 'UPCOMING'
-            ORDER BY e.event_date ASC
-            `,
+      SELECT 
+        e.*,
+        CASE WHEN r.user_id IS NULL THEN false ELSE true END AS is_registered
+      FROM events e
+      LEFT JOIN registrations r
+        ON r.event_id = e.id
+        AND r.user_id = $1
+      WHERE e.status = 'UPCOMING'
+      ORDER BY e.event_date ASC
+      `,
             [req.user.id]
         );
 
@@ -77,24 +57,20 @@ exports.getUpcomingEvents = async (req, res) => {
 /**
  * ALL USERS
  * Event Details
- * Includes is_registered flag
  */
 exports.getEventById = async (req, res) => {
     try {
         const result = await pool.query(
             `
-            SELECT 
-                e.*,
-                CASE 
-                    WHEN r.user_id IS NULL THEN false
-                    ELSE true
-                END AS is_registered
-            FROM events e
-            LEFT JOIN registrations r
-                ON r.event_id = e.id
-                AND r.user_id = $1
-            WHERE e.id = $2
-            `,
+      SELECT 
+        e.*,
+        CASE WHEN r.user_id IS NULL THEN false ELSE true END AS is_registered
+      FROM events e
+      LEFT JOIN registrations r
+        ON r.event_id = e.id
+        AND r.user_id = $1
+      WHERE e.id = $2
+      `,
             [req.user.id, req.params.eventId]
         );
 
@@ -107,8 +83,7 @@ exports.getEventById = async (req, res) => {
 
 /**
  * ASST_ADMIN / ADMIN
- * Upload or Update Joining Link
- * Email → REGISTERED USERS
+ * Update Joining Link
  */
 exports.updateJoiningLink = async (req, res) => {
     const { joining_link } = req.body;
@@ -120,32 +95,9 @@ exports.updateJoiningLink = async (req, res) => {
             [joining_link, eventId]
         );
 
-        const users = await pool.query(
-            `
-            SELECT u.email
-            FROM registrations r
-            JOIN users u ON u.id = r.user_id
-            WHERE r.event_id = $1
-            `,
-            [eventId]
-        );
+        // Emails removed
 
-        for (const user of users.rows) {
-            await sendEmail(
-                user.email,
-                "Event Joining Link Updated – Rotaract GHRUA",
-                `
-                <p>Hello,</p>
-                <p>The joining link for your registered event has been updated.</p>
-                <p><strong>Joining Link:</strong></p>
-                <a href="${joining_link}">${joining_link}</a>
-                <br/><br/>
-                <p>Regards,<br/>Rotaract Club of GHRUA</p>
-                `
-            );
-        }
-
-        res.json({ message: "Joining link updated and emails sent" });
+        res.json({ message: "Joining link updated" });
     } catch (err) {
         console.error("Update joining link error:", err);
         res.status(500).json({ message: "Failed to update joining link" });
@@ -154,8 +106,7 @@ exports.updateJoiningLink = async (req, res) => {
 
 /**
  * ASST_ADMIN / ADMIN
- * Mark Event Completed
- * No Email
+ * Complete Event
  */
 exports.completeEvent = async (req, res) => {
     try {

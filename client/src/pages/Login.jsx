@@ -38,8 +38,11 @@ export default function Login() {
                 className="bg-white p-6 rounded shadow w-80"
             >
                 <h2 className="text-xl font-semibold mb-4 text-center">
-                    RAC GHRUA Login
+                    RAC GHRUA - Portal
                 </h2>
+                <h1 className="text-xl font-semibold mb-4 text-center">
+                    Login
+                </h1>
 
                 <input
                     type="email"
