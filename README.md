@@ -76,9 +76,6 @@ A full-stack web application to manage members, events, attendance, and certific
 
 ### Notifications
 
-- Email notifications to members for:  
-  - Event added  
-  - Joining link updated  
 - Toast notifications for success/error messages.  
 
 ---

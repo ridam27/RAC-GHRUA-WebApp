@@ -96,7 +96,7 @@ export default function Login() {
                     <p className="text-sm text-gray-600">
                         Crafted with ❤️ by{" "}
                         <a
-                            href="https://instagram.com/ridam_satkar"
+                            href="https://instagram.com/ridam_27"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-medium text-gray-800 hover:text-red-600 transition"
