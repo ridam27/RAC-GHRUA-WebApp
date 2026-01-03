@@ -12,6 +12,8 @@ import Attendance from "../pages/Attendance";
 import AdminMembers from "../pages/AdminMembers";
 import Profile from "../pages/Profile";
 import EventHistory from "../pages/EventHistory";
+import UserStats from "../pages/UserStats";
+
 
 
 export default function AppRoutes() {
@@ -109,6 +111,15 @@ export default function AppRoutes() {
                 element={
                     <ProtectedRoute roles={["ADMIN", "ASST_ADMIN"]}>
                         <EventHistory />
+                    </ProtectedRoute>
+                }
+            />
+            
+            <Route
+                path="/user-stats"
+                element={
+                    <ProtectedRoute roles={["ADMIN", "ASST_ADMIN"]}>
+                        <UserStats />
                     </ProtectedRoute>
                 }
             />

@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; // 🔹 ADDED
 
 export default function EventHistory() {
     const [events, setEvents] = useState([]);
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
     const [savingId, setSavingId] = useState(null);
+
+    const navigate = useNavigate(); // 🔹 ADDED
 
     const loadEvents = async () => {
         try {
@@ -84,8 +87,9 @@ export default function EventHistory() {
             <div className="p-6">
                 <h2 className="text-2xl font-semibold mb-4">Event History</h2>
 
-                {/* Filters */}
-                <div className="flex gap-4 mb-4">
+                {/* 🔹 FILTERS + MEMBER STATS BUTTON ROW */}
+                <div className="flex items-center gap-4 mb-4">
+                    {/* Filters */}
                     <input
                         type="date"
                         value={from}
@@ -110,6 +114,16 @@ export default function EventHistory() {
                     >
                         Export Excel
                     </button>
+
+                    {/* 🔹 PUSH BUTTON TO EXTREME RIGHT */}
+                    <div className="ml-auto">
+                        <button
+                            onClick={() => navigate("/user-stats")}
+                            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
+                        >
+                            Member Stats
+                        </button>
+                    </div>
                 </div>
 
                 {/* Table */}
@@ -132,7 +146,6 @@ export default function EventHistory() {
                                 <td className="p-2">{e.event_date}</td>
                                 <td className="p-2">{e.title}</td>
 
-                                {/* STATUS */}
                                 <td className="p-2">
                                     <span
                                         className={`px-2 py-1 rounded text-xs font-medium ${
@@ -145,7 +158,6 @@ export default function EventHistory() {
                                     </span>
                                 </td>
 
-                                {/* CERTIFICATE */}
                                 <td className="p-2">
                                     <button
                                         onClick={() => toggleCertificate(e.id)}
@@ -159,7 +171,6 @@ export default function EventHistory() {
                                     </button>
                                 </td>
 
-                                {/* SAVE */}
                                 <td className="p-2">
                                     <button
                                         type="button"

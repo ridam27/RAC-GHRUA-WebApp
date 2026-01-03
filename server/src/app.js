@@ -55,3 +55,6 @@ app.use("/api/profile", profileRoutes);
 
 const eventHistoryRoutes = require("./routes/eventHistory.routes");
 app.use("/api/event-history", eventHistoryRoutes);
+
+const userStatsRoutes = require("./routes/userstats.routes");
+app.use("/api/stats", userStatsRoutes);
