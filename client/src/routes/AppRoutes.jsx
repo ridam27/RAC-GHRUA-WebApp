@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../pages/Login";
+import Signup from "../pages/Signup";
 import ProtectedRoute from "../components/ProtectedRoute";
 import MemberDashboard from "../pages/MemberDashboard";
 import AsstAdminDashboard from "../pages/AsstAdminDashboard";
@@ -17,6 +18,8 @@ export default function AppRoutes() {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
+
+            <Route path="/signup" element={<Signup />} />
 
             <Route
                 path="/dashboard/member"
