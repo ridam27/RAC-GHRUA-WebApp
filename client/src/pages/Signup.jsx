@@ -50,20 +50,18 @@ export default function Signup() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-            {/* 🔹 WRAPPER */}
             <div className="w-full max-w-md">
 
-                {/* 🔹 SIGNUP CARD */}
                 <div className="bg-white p-5 rounded-2xl shadow-lg">
                     <h2 className="text-2xl font-bold text-center mb-1">
                         RAC GHRUA - Portal
                     </h2>
-                    {/* 🔹 Reduced spacing */}
                     <h3 className="text-lg font-semibold text-center mb-4">
                         Create Account
                     </h3>
 
                     <form onSubmit={handleSubmit} className="space-y-3">
+
                         <input
                             type="text"
                             name="name"
@@ -71,7 +69,7 @@ export default function Signup() {
                             value={form.name}
                             onChange={handleChange}
                             required
-                            className="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-400"
                         />
 
                         <input
@@ -81,7 +79,7 @@ export default function Signup() {
                             value={form.email}
                             onChange={handleChange}
                             required
-                            className="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-400"
                         />
 
                         <input
@@ -91,24 +89,30 @@ export default function Signup() {
                             value={form.mobile}
                             onChange={handleChange}
                             required
-                            className="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-400"
                         />
 
-                        <input
-                            type="date"
-                            name="dob"
-                            value={form.dob}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                        {/* ✅ DOB LABEL + DATE INPUT */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-600 mb-1">
+                                Date of Birth
+                            </label>
+                            <input
+                                type="date"
+                                name="dob"
+                                value={form.dob}
+                                onChange={handleChange}
+                                required
+                                className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                            />
+                        </div>
 
                         <select
                             name="university"
                             value={form.university}
                             onChange={handleChange}
                             required
-                            className="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-400"
                         >
                             <option value="">Select University</option>
                             {universities.map((u) => (
@@ -125,7 +129,7 @@ export default function Signup() {
                             value={form.password}
                             onChange={handleChange}
                             required
-                            className="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-400"
                         />
 
                         <input
@@ -135,13 +139,13 @@ export default function Signup() {
                             value={form.confirmPassword}
                             onChange={handleChange}
                             required
-                            className="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-400"
                         />
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 text-white p-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                            className="w-full bg-blue-600 text-white p-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"
                         >
                             {loading ? "Signing Up..." : "Sign Up"}
                         </button>
@@ -158,10 +162,9 @@ export default function Signup() {
                     </p>
                 </div>
 
-                {/* 🔹 CREDIT FOOTER (CURVED) */}
                 <div className="mt-3 bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow text-center">
                     <p className="text-xs text-gray-600">
-                        Made with ❤️ by{" "}
+                        Crafted with ❤️ by{" "}
                         <a
                             href="https://instagram.com/ridam_27"
                             target="_blank"
@@ -172,6 +175,7 @@ export default function Signup() {
                         </a>
                     </p>
                 </div>
+
             </div>
         </div>
     );

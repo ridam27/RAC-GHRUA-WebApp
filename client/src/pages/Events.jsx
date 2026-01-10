@@ -17,32 +17,40 @@ export default function Events() {
         loadEvents();
     }, []);
 
+    const formatDate = (date) => {
+        if (!date) return "";
+        const d = new Date(date);
+        return d.toLocaleDateString("en-GB"); // DD/MM/YYYY
+    };
+
     return (
         <>
             <Navbar />
 
-            <div className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+            <div className="p-4 md:p-6">
+                <h2 className="text-lg md:text-xl font-semibold mb-4">
+                    Upcoming Events
+                </h2>
 
                 <div className="grid gap-4">
                     {events.map((e) => (
                         <div
                             key={e.id}
-                            className="bg-white p-4 rounded shadow flex justify-between items-center"
+                            className="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row md:justify-between md:items-center gap-4"
                         >
-                            {/* Event Title + Status */}
+                            {/* 🔹 EVENT INFO */}
                             <div
                                 onClick={() => navigate(`/events/${e.id}`)}
-                                className="cursor-pointer"
+                                className="cursor-pointer space-y-1"
                             >
-                                <h3 className="font-semibold flex items-center gap-2">
+                                <h3 className="font-semibold flex flex-wrap items-center gap-2">
                                     {e.title}
 
                                     <span
-                                        className={`text-xs px-2 py-0.5 rounded ${
+                                        className={`text-xs px-2 py-0.5 rounded-full ${
                                             e.is_registered
-                                                ? "bg-green-500 text-white"
-                                                : "bg-gray-300 text-black"
+                                                ? "bg-green-100 text-green-700"
+                                                : "bg-gray-200 text-gray-700"
                                         }`}
                                     >
                                         {e.is_registered
@@ -52,12 +60,12 @@ export default function Events() {
                                 </h3>
 
                                 <p className="text-sm text-gray-500">
-                                    {e.event_date}
+                                    Event Date: {formatDate(e.event_date)}
                                 </p>
                             </div>
 
-                            {/* Buttons */}
-                            <div className="flex gap-2">
+                            {/* 🔹 ACTION BUTTONS */}
+                            <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                                 <button
                                     disabled={e.is_registered}
                                     onClick={async () => {
@@ -65,7 +73,7 @@ export default function Events() {
                                         toast.success("Registered");
                                         loadEvents();
                                     }}
-                                    className={`px-3 py-1 rounded text-white ${
+                                    className={`px-4 py-2 rounded-lg text-white text-sm w-full sm:w-auto transition ${
                                         e.is_registered
                                             ? "bg-gray-400 cursor-not-allowed"
                                             : "bg-green-600 hover:bg-green-700"
@@ -81,7 +89,7 @@ export default function Events() {
                                         toast.success("Unregistered");
                                         loadEvents();
                                     }}
-                                    className={`px-3 py-1 rounded text-white ${
+                                    className={`px-4 py-2 rounded-lg text-white text-sm w-full sm:w-auto transition ${
                                         !e.is_registered
                                             ? "bg-gray-400 cursor-not-allowed"
                                             : "bg-red-600 hover:bg-red-700"
@@ -93,6 +101,12 @@ export default function Events() {
                         </div>
                     ))}
                 </div>
+
+                {events.length === 0 && (
+                    <div className="text-gray-500 mt-6 text-sm">
+                        No upcoming events
+                    </div>
+                )}
             </div>
         </>
     );

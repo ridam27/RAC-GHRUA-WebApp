@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 export default function UserStats() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [from, setFrom] = useState(""); // ✅ date filter
-    const [to, setTo] = useState("");     // ✅ date filter
+    const [from, setFrom] = useState("");
+    const [to, setTo] = useState("");
 
     useEffect(() => {
         fetchStats();
@@ -17,20 +17,20 @@ export default function UserStats() {
         setLoading(true);
         try {
             const res = await api.get("/stats", {
-                params: { from, to } // ✅ send filters to backend
+                params: { from, to }
             });
             setUsers(res.data);
-        } catch (err) {
+        } catch {
             toast.error("Failed to load user stats");
         } finally {
             setLoading(false);
         }
     };
 
-    const exportExcel = async () => { // ✅ Export button functionality
+    const exportExcel = async () => {
         try {
             const res = await api.get("/stats/export", {
-                params: { from, to }, // ✅ apply filters in export
+                params: { from, to },
                 responseType: "blob"
             });
 
@@ -38,9 +38,7 @@ export default function UserStats() {
             const link = document.createElement("a");
             link.href = url;
             link.download = "user_attendance_stats.xlsx";
-            document.body.appendChild(link);
             link.click();
-            link.remove();
         } catch {
             toast.error("Failed to export Excel");
         }
@@ -58,31 +56,30 @@ export default function UserStats() {
         <>
             <Navbar />
 
-            <div className="p-6">
-                <h2 className="text-2xl font-semibold mb-4">
+            <div className="p-4 md:p-6">
+                {/* 🔹 HEADER */}
+                <h2 className="text-xl md:text-2xl font-semibold mb-4">
                     User Attendance Statistics
                 </h2>
 
-                {/* ✅ Filters & Export */}
-                <div className="flex justify-between mb-4 gap-2">
-                    <div className="flex gap-2">
+                {/* 🔹 FILTERS */}
+                <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+                    <div className="flex flex-col sm:flex-row gap-3">
                         <input
                             type="date"
                             value={from}
                             onChange={(e) => setFrom(e.target.value)}
-                            className="border p-2 rounded"
-                            placeholder="From"
+                            className="border p-2 rounded w-full sm:w-auto"
                         />
                         <input
                             type="date"
                             value={to}
                             onChange={(e) => setTo(e.target.value)}
-                            className="border p-2 rounded"
-                            placeholder="To"
+                            className="border p-2 rounded w-full sm:w-auto"
                         />
                         <button
                             onClick={fetchStats}
-                            className="bg-blue-600 text-white px-4 py-2 rounded"
+                            className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
                         >
                             Apply
                         </button>
@@ -90,41 +87,44 @@ export default function UserStats() {
 
                     <button
                         onClick={exportExcel}
-                        className="bg-green-600 text-white px-4 py-2 rounded"
+                        className="md:ml-auto bg-green-600 text-white px-4 py-2 rounded w-full md:w-auto"
                     >
                         Export Excel
                     </button>
                 </div>
 
-                <div className="overflow-x-auto bg-white rounded-xl shadow">
-                    <table className="min-w-full border-collapse">
+                {/* 🔹 DESKTOP TABLE */}
+                <div className="hidden md:block overflow-x-auto bg-white rounded-xl shadow">
+                    <table className="min-w-full border-collapse text-sm">
                         <thead className="bg-gray-100">
                             <tr>
-                                {/* ✅ SERIAL NUMBER */}
-                                <th className="p-3 text-center text-sm font-semibold">Sr. No.</th>
-                                <th className="p-3 text-left text-sm font-semibold">Name</th>
-                                <th className="p-3 text-left text-sm font-semibold">Club Role</th>
-                                <th className="p-3 text-center text-sm font-semibold">Registered</th>
-                                <th className="p-3 text-center text-sm font-semibold">Attended</th>
-                                <th className="p-3 text-center text-sm font-semibold">Missed</th>
-                                <th className="p-3 text-center text-sm font-semibold">Attendance %</th>
+                                <th className="p-3 text-center">Sr. No.</th>
+                                <th className="p-3 text-left">Name</th>
+                                <th className="p-3 text-left">Club Role</th>
+                                <th className="p-3 text-center">Registered</th>
+                                <th className="p-3 text-center">Attended</th>
+                                <th className="p-3 text-center">Missed</th>
+                                <th className="p-3 text-center">Attendance %</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {users.map((u, index) => (
+                            {users.map((u, i) => (
                                 <tr
-                                    key={u.user_id} // ✅ correct unique key
-                                    className="border-t hover:bg-gray-50 transition"
+                                    key={u.user_id}
+                                    className="border-t hover:bg-gray-50"
                                 >
-                                    {/* ✅ SERIAL NUMBER */}
-                                    <td className="p-3 text-center font-medium">{index + 1}</td>
+                                    <td className="p-3 text-center font-medium">{i + 1}</td>
                                     <td className="p-3">{u.name}</td>
-                                    <td className="p-3 text-sm text-gray-600">{u.club_role}</td>
+                                    <td className="p-3 text-gray-600">{u.club_role}</td>
                                     <td className="p-3 text-center">{u.total_registered}</td>
-                                    <td className="p-3 text-center text-green-600 font-medium">{u.attended}</td>
-                                    <td className="p-3 text-center text-red-600 font-medium">{u.missed}</td>
-                                    <td className="p-3 text-center font-semibold">
+                                    <td className="p-3 text-center text-green-600 font-semibold">
+                                        {u.attended}
+                                    </td>
+                                    <td className="p-3 text-center text-red-600 font-semibold">
+                                        {u.missed}
+                                    </td>
+                                    <td className="p-3 text-center">
                                         <span
                                             className={`px-3 py-1 rounded-full text-sm ${
                                                 u.attendance_percentage >= 75
@@ -139,20 +139,61 @@ export default function UserStats() {
                                     </td>
                                 </tr>
                             ))}
-
-                            {users.length === 0 && (
-                                <tr>
-                                    <td
-                                        colSpan="7" // ✅ updated colSpan
-                                        className="p-6 text-center text-gray-500"
-                                    >
-                                        No data available
-                                    </td>
-                                </tr>
-                            )}
                         </tbody>
                     </table>
                 </div>
+
+                {/* 🔹 MOBILE CARDS */}
+                <div className="md:hidden grid gap-4">
+                    {users.map((u, i) => (
+                        <div
+                            key={u.user_id}
+                            className="bg-white rounded-xl shadow p-4 space-y-2"
+                        >
+                            <div className="flex justify-between items-center">
+                                <span className="font-semibold">
+                                    {i + 1}. {u.name}
+                                </span>
+                                <span
+                                    className={`px-3 py-1 rounded-full text-xs ${
+                                        u.attendance_percentage >= 75
+                                            ? "bg-green-100 text-green-700"
+                                            : u.attendance_percentage >= 50
+                                            ? "bg-yellow-100 text-yellow-700"
+                                            : "bg-red-100 text-red-700"
+                                    }`}
+                                >
+                                    {u.attendance_percentage}%
+                                </span>
+                            </div>
+
+                            <p className="text-sm text-gray-500">
+                                Role: {u.club_role || "—"}
+                            </p>
+
+                            <div className="grid grid-cols-3 gap-2 text-center text-sm">
+                                <div>
+                                    <p className="text-gray-500">Registered</p>
+                                    <p className="font-semibold">{u.total_registered}</p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500">Attended</p>
+                                    <p className="font-semibold text-green-600">{u.attended}</p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500">Missed</p>
+                                    <p className="font-semibold text-red-600">{u.missed}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {users.length === 0 && (
+                    <div className="text-gray-500 mt-6 text-sm text-center">
+                        No data available
+                    </div>
+                )}
             </div>
         </>
     );

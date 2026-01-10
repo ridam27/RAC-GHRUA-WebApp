@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom"; // 🔹 ADDED
+import { useNavigate } from "react-router-dom";
 
 export default function EventHistory() {
     const [events, setEvents] = useState([]);
@@ -10,7 +10,7 @@ export default function EventHistory() {
     const [to, setTo] = useState("");
     const [savingId, setSavingId] = useState(null);
 
-    const navigate = useNavigate(); // 🔹 ADDED
+    const navigate = useNavigate();
 
     const loadEvents = async () => {
         try {
@@ -27,10 +27,6 @@ export default function EventHistory() {
         loadEvents();
     }, []);
 
-    const applyFilter = () => {
-        loadEvents();
-    };
-
     const exportExcel = async () => {
         try {
             const res = await api.get("/event-history/export", {
@@ -42,9 +38,7 @@ export default function EventHistory() {
             const link = document.createElement("a");
             link.href = url;
             link.download = "event_history.xlsx";
-            document.body.appendChild(link);
             link.click();
-            link.remove();
         } catch {
             toast.error("Failed to export Excel");
         }
@@ -55,12 +49,12 @@ export default function EventHistory() {
             prev.map((e) =>
                 e.id === id
                     ? {
-                        ...e,
-                        certificate_status:
-                            e.certificate_status === "RECEIVED"
-                                ? "NOT_RECEIVED"
-                                : "RECEIVED"
-                    }
+                          ...e,
+                          certificate_status:
+                              e.certificate_status === "RECEIVED"
+                                  ? "NOT_RECEIVED"
+                                  : "RECEIVED"
+                      }
                     : e
             )
         );
@@ -84,115 +78,135 @@ export default function EventHistory() {
         <>
             <Navbar />
 
-            <div className="p-6">
-                <h2 className="text-2xl font-semibold mb-4">Event History</h2>
+            <div className="p-4 md:p-6">
+                {/* 🔹 HEADING ROW */}
+                <div className="flex items-center mb-4">
+                    <h2 className="text-xl md:text-2xl font-semibold">
+                        Event History
+                    </h2>
 
-                {/* 🔹 FILTERS + MEMBER STATS BUTTON ROW */}
-                <div className="flex items-center gap-4 mb-4">
-                    {/* Filters */}
-                    <input
-                        type="date"
-                        value={from}
-                        onChange={(e) => setFrom(e.target.value)}
-                        className="border p-2 rounded"
-                    />
-                    <input
-                        type="date"
-                        value={to}
-                        onChange={(e) => setTo(e.target.value)}
-                        className="border p-2 rounded"
-                    />
+                    {/* 🔹 MOBILE MEMBER STATS (ONLY MOBILE) */}
                     <button
-                        onClick={applyFilter}
-                        className="bg-blue-600 text-white px-4 py-2 rounded"
+                        onClick={() => navigate("/user-stats")}
+                        className="ml-auto md:hidden bg-indigo-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-indigo-700 transition"
                     >
-                        Apply
+                        Member Stats
                     </button>
-                    <button
-                        onClick={exportExcel}
-                        className="bg-green-600 text-white px-4 py-2 rounded"
-                    >
-                        Export Excel
-                    </button>
-
-                    {/* 🔹 PUSH BUTTON TO EXTREME RIGHT */}
-                    <div className="ml-auto">
-                        <button
-                            onClick={() => navigate("/user-stats")}
-                            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
-                        >
-                            Member Stats
-                        </button>
-                    </div>
                 </div>
 
-                {/* Table */}
-                <table className="w-full bg-white rounded shadow text-sm">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="p-2">Sr. No.</th>
-                            <th className="p-2">Event Date</th>
-                            <th className="p-2">Event Name</th>
-                            <th className="p-2">Status</th>
-                            <th className="p-2">Certificate</th>
-                            <th className="p-2">Action</th>
-                        </tr>
-                    </thead>
+                {/* 🔹 FILTERS */}
+                <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <input
+                            type="date"
+                            value={from}
+                            onChange={(e) => setFrom(e.target.value)}
+                            className="border p-2 rounded w-full sm:w-auto"
+                        />
+                        <input
+                            type="date"
+                            value={to}
+                            onChange={(e) => setTo(e.target.value)}
+                            className="border p-2 rounded w-full sm:w-auto"
+                        />
+                        <button
+                            onClick={loadEvents}
+                            className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
+                        >
+                            Apply
+                        </button>
+                        <button
+                            onClick={exportExcel}
+                            className="bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto"
+                        >
+                            Export Excel
+                        </button>
+                    </div>
 
-                    <tbody>
-                        {events.map((e, i) => (
-                            <tr key={e.id} className="border-b text-center">
-                                <td className="p-2">{i + 1}</td>
-                                <td className="p-2">{e.event_date}</td>
-                                <td className="p-2">{e.title}</td>
+                    {/* 🔹 DESKTOP MEMBER STATS */}
+                    <button
+                        onClick={() => navigate("/user-stats")}
+                        className="hidden md:block md:ml-auto bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
+                    >
+                        Member Stats
+                    </button>
+                </div>
 
-                                <td className="p-2">
-                                    <span
-                                        className={`px-2 py-1 rounded text-xs font-medium ${
-                                            e.status === "COMPLETED"
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-yellow-100 text-yellow-700"
-                                        }`}
-                                    >
-                                        {e.status}
-                                    </span>
-                                </td>
-
-                                <td className="p-2">
-                                    <button
-                                        onClick={() => toggleCertificate(e.id)}
-                                        className={`px-3 py-1 rounded text-xs text-white ${
-                                            e.certificate_status === "RECEIVED"
-                                                ? "bg-green-600"
-                                                : "bg-red-600"
-                                        }`}
-                                    >
-                                        {e.certificate_status}
-                                    </button>
-                                </td>
-
-                                <td className="p-2">
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            saveCertificateStatus(
-                                                e.id,
-                                                e.certificate_status
-                                            )
-                                        }
-                                        disabled={savingId === e.id}
-                                        className="bg-blue-600 text-white px-3 py-1 rounded text-xs"
-                                    >
-                                        {savingId === e.id ? "Saving..." : "Save"}
-                                    </button>
-                                </td>
+                {/* 🔹 TABLE */}
+                <div className="overflow-x-auto bg-white rounded shadow">
+                    <table className="min-w-\[700px] w-full text-sm">
+                        <thead className="bg-gray-100">
+                            <tr>
+                                <th className="p-2">Sr. No.</th>
+                                <th className="p-2">Event Date</th>
+                                <th className="p-2">Event Name</th>
+                                <th className="p-2">Status</th>
+                                <th className="p-2">Certificate</th>
+                                <th className="p-2">Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            {events.map((e, i) => (
+                                <tr key={e.id} className="border-b text-center">
+                                    <td className="p-2">{i + 1}</td>
+                                    <td className="p-2">{e.event_date}</td>
+                                    <td className="p-2">{e.title}</td>
+
+                                    <td className="p-2">
+                                        <span
+                                            className={`px-2 py-1 rounded text-xs font-medium ${
+                                                e.status === "COMPLETED"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : "bg-yellow-100 text-yellow-700"
+                                            }`}
+                                        >
+                                            {e.status}
+                                        </span>
+                                    </td>
+
+                                    <td className="p-2">
+                                        <button
+                                            onClick={() =>
+                                                toggleCertificate(e.id)
+                                            }
+                                            className={`px-3 py-1 rounded text-xs text-white ${
+                                                e.certificate_status ===
+                                                "RECEIVED"
+                                                    ? "bg-green-600"
+                                                    : "bg-red-600"
+                                            }`}
+                                        >
+                                            {e.certificate_status}
+                                        </button>
+                                    </td>
+
+                                    <td className="p-2">
+                                        <button
+                                            onClick={() =>
+                                                saveCertificateStatus(
+                                                    e.id,
+                                                    e.certificate_status
+                                                )
+                                            }
+                                            disabled={savingId === e.id}
+                                            className="bg-blue-600 text-white px-3 py-1 rounded text-xs"
+                                        >
+                                            {savingId === e.id
+                                                ? "Saving..."
+                                                : "Save"}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
                 {events.length === 0 && (
-                    <div className="text-gray-500 mt-4">No events found</div>
+                    <div className="text-gray-500 mt-4 text-sm">
+                        No events found
+                    </div>
                 )}
             </div>
         </>

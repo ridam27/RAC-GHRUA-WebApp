@@ -6,13 +6,12 @@ import toast from "react-hot-toast";
 export default function AdminMembers() {
     const [users, setUsers] = useState([]);
     const [savingId, setSavingId] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const formatDate = (date) => {
         if (!date) return "";
         return date.split("T")[0];
     };
-
-
 
     const loadUsers = async () => {
         try {
@@ -32,6 +31,7 @@ export default function AdminMembers() {
             setSavingId(user.id);
             await api.put(`/admin/users/${user.id}`, user);
             toast.success("Updated");
+            setSelectedUser(null);
         } catch {
             toast.error("Update failed");
         } finally {
@@ -45,14 +45,21 @@ export default function AdminMembers() {
         setUsers(updated);
     };
 
+    const handleModalChange = (field, value) => {
+        setSelectedUser({ ...selectedUser, [field]: value });
+    };
+
     return (
         <>
             <Navbar />
 
-            <div className="p-6 overflow-x-auto">
-                <h2 className="text-2xl font-semibold mb-4">Registered Members</h2>
+            <div className="p-4 md:p-6 overflow-x-auto">
+                <h2 className="text-xl md:text-2xl font-semibold mb-4">
+                    Registered Members
+                </h2>
 
-                <table className="min-w-full bg-white rounded shadow text-sm">
+                {/* 🔹 DESKTOP TABLE */}
+                <table className="hidden md:table min-w-full bg-white rounded shadow text-sm">
                     <thead className="bg-gray-100">
                         <tr>
                             <th className="p-2">Name</th>
@@ -109,7 +116,6 @@ export default function AdminMembers() {
                                         }
                                         className="border p-1 rounded w-full"
                                     />
-
                                 </td>
 
                                 <td className="p-2">
@@ -173,6 +179,136 @@ export default function AdminMembers() {
                         ))}
                     </tbody>
                 </table>
+
+                {/* 🔹 MOBILE TABLE */}
+                <table className="md:hidden w-full bg-white rounded shadow text-sm">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="p-2">Sr. No.</th>
+                            <th className="p-2">Name</th>
+                            <th className="p-2">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {users.map((user, i) => (
+                            <tr key={user.id} className="border-b text-center">
+                                <td className="p-2">{i + 1}</td>
+                                <td className="p-2">{user.name}</td>
+                                <td className="p-2">
+                                    <button
+                                        onClick={() => setSelectedUser(user)}
+                                        className="bg-indigo-600 text-white px-3 py-1 rounded text-xs"
+                                    >
+                                        Update Data
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {/* 🔹 MODAL */}
+                {selectedUser && (
+                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-xl w-full max-w-md p-4 space-y-3">
+                            <h3 className="font-semibold text-lg">
+                                Update Member
+                            </h3>
+
+                            <input
+                                value={selectedUser.name}
+                                onChange={(e) =>
+                                    handleModalChange("name", e.target.value)
+                                }
+                                className="border p-2 rounded w-full"
+                                placeholder="Name"
+                            />
+
+                            <input
+                                value={selectedUser.mobile || ""}
+                                onChange={(e) =>
+                                    handleModalChange("mobile", e.target.value)
+                                }
+                                className="border p-2 rounded w-full"
+                                placeholder="Mobile"
+                            />
+
+                            <input
+                                value={selectedUser.email}
+                                onChange={(e) =>
+                                    handleModalChange("email", e.target.value)
+                                }
+                                className="border p-2 rounded w-full"
+                                placeholder="Email"
+                            />
+
+                            <input
+                                type="date"
+                                value={formatDate(selectedUser.dob)}
+                                onChange={(e) =>
+                                    handleModalChange("dob", e.target.value)
+                                }
+                                className="border p-2 rounded w-full"
+                            />
+
+                            <input
+                                value={selectedUser.university || ""}
+                                onChange={(e) =>
+                                    handleModalChange("university", e.target.value)
+                                }
+                                className="border p-2 rounded w-full"
+                                placeholder="University"
+                            />
+
+                            <select
+                                value={selectedUser.system_role}
+                                onChange={(e) =>
+                                    handleModalChange("system_role", e.target.value)
+                                }
+                                className="border p-2 rounded w-full"
+                            >
+                                <option>ADMIN</option>
+                                <option>ASST_ADMIN</option>
+                                <option>MEMBER</option>
+                            </select>
+
+                            <select
+                                value={selectedUser.club_fee_status}
+                                onChange={(e) =>
+                                    handleModalChange(
+                                        "club_fee_status",
+                                        e.target.value
+                                    )
+                                }
+                                className="border p-2 rounded w-full"
+                            >
+                                <option>PAID</option>
+                                <option>PARTIAL</option>
+                                <option>UNPAID</option>
+                            </select>
+
+                            <div className="flex gap-3 pt-2">
+                                <button
+                                    onClick={() => updateUser(selectedUser)}
+                                    disabled={savingId === selectedUser.id}
+                                    className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+                                >
+                                    {savingId === selectedUser.id
+                                        ? "Saving..."
+                                        : "Save"}
+                                </button>
+
+                                <button
+                                    onClick={() => setSelectedUser(null)}
+                                    className="border px-4 py-2 rounded w-full"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {users.length === 0 && (
                     <div className="text-gray-500 mt-4">No users found</div>
