@@ -29,7 +29,7 @@ exports.login = async (req, res) => {
                 club_role: user.club_role
             },
             process.env.JWT_SECRET,
-            { expiresIn: "2h" }
+            { expiresIn: "1h" }
         );
 
         res.json({
