@@ -6,56 +6,87 @@ const pool = require("../config/db");
 exports.memberDashboard = async (req, res) => {
     const userId = req.user.id;
 
-    const totalEvents = await pool.query(
-        "SELECT COUNT(*) FROM registrations WHERE user_id=$1",
+    // 1️⃣ Total completed events
+    const totalEventsResult = await pool.query(
+        "SELECT COUNT(*) FROM events WHERE status = 'COMPLETED'"
+    );
+    const totalEvents = Number(totalEventsResult.rows[0].count);
+
+    // 2️⃣ Registered events (completed only)
+    const registeredResult = await pool.query(
+        `
+        SELECT COUNT(*) 
+        FROM registrations r
+        JOIN events e ON r.event_id = e.id
+        WHERE r.user_id = $1 AND e.status = 'COMPLETED'
+        `,
         [userId]
     );
+    const registeredEvents = Number(registeredResult.rows[0].count);
 
-    const attended = await pool.query(
-        "SELECT COUNT(*) FROM attendance WHERE user_id=$1 AND present=true",
+    // 3️⃣ Attended events (present = true)
+    const attendedResult = await pool.query(
+        `
+        SELECT COUNT(*) 
+        FROM attendance a
+        JOIN events e ON a.event_id = e.id
+        WHERE a.user_id = $1 
+          AND a.present = true 
+          AND e.status = 'COMPLETED'
+        `,
         [userId]
     );
+    const attended = Number(attendedResult.rows[0].count);
 
-    const missed = totalEvents.rows[0].count - attended.rows[0].count;
+    // 4️⃣ Missed events
+    const missed = totalEvents - attended;
+
+    // 5️⃣ Attendance percentage
+    const attendancePercentage =
+        totalEvents === 0
+            ? 0
+            : Math.round(((totalEvents - missed) / totalEvents) * 100);
 
     res.json({
-        total_registered: totalEvents.rows[0].count,
-        attended: attended.rows[0].count,
+        total_events: totalEvents,
+        registered_events: registeredEvents,
+        attended,
         missed,
-        attendance_percentage:
-            totalEvents.rows[0].count == 0
-                ? 0
-                : Math.round(
-                    (attended.rows[0].count / totalEvents.rows[0].count) * 100
-                )
+        attendance_percentage: attendancePercentage
     });
-
 };
+
 
 /**
  * ASST ADMIN DASHBOARD
  */
 exports.asstAdminDashboard = async (req, res) => {
-    const userId = req.user.id;
 
+    // 1️⃣ Get all events
     const events = await pool.query(
-        "SELECT id, title, status FROM events WHERE created_by=$1",
-        [userId]
+        "SELECT id, title, status FROM events"
     );
 
     const totalEvents = events.rows.length;
-
     const upcoming = events.rows.filter(e => e.status === "UPCOMING").length;
     const completed = events.rows.filter(e => e.status === "COMPLETED").length;
 
+    // 2️⃣ Attendance per event (all events)
     const attendance = await pool.query(
-        `SELECT e.title,
-            COUNT(a.user_id) FILTER (WHERE a.present=true) AS present_count
-     FROM events e
-     LEFT JOIN attendance a ON e.id = a.event_id
-     WHERE e.created_by=$1
-     GROUP BY e.title`,
-        [userId]
+        `
+        SELECT 
+            e.id,
+            e.title,
+            e.event_date,
+            e.status,
+            e.certificate_status,
+            COUNT(a.user_id) FILTER (WHERE a.present = true) AS present_count,
+            COUNT(a.user_id) FILTER (WHERE a.present = false) AS absent_count
+        FROM events e
+        LEFT JOIN attendance a ON e.id = a.event_id
+        GROUP BY e.id, e.title
+        ORDER BY e.title
+        `
     );
 
     res.json({

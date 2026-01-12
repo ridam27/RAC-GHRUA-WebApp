@@ -13,6 +13,8 @@ import AdminMembers from "../pages/AdminMembers";
 import Profile from "../pages/Profile";
 import EventHistory from "../pages/EventHistory";
 import UserStats from "../pages/UserStats";
+import InpEvents from "../pages/InpEvents";
+import Meetings from "../pages/Meetings";
 
 
 
@@ -35,7 +37,7 @@ export default function AppRoutes() {
             <Route
                 path="/dashboard/asst-admin"
                 element={
-                    <ProtectedRoute roles={["ASST_ADMIN", "ADMIN"]}>
+                    <ProtectedRoute roles={["ASST_ADMIN"]}>
                         <AsstAdminDashboard />
                     </ProtectedRoute>
                 }
@@ -120,6 +122,24 @@ export default function AppRoutes() {
                 element={
                     <ProtectedRoute roles={["ADMIN", "ASST_ADMIN"]}>
                         <UserStats />
+                    </ProtectedRoute>
+                }
+            />
+            
+            <Route
+                path="/inp-events"
+                element={
+                    <ProtectedRoute roles={["ADMIN", "ASST_ADMIN"]}>
+                        <InpEvents />
+                    </ProtectedRoute>
+                }
+            />
+            
+            <Route
+                path="/meetings"
+                element={
+                    <ProtectedRoute roles={["ADMIN", "ASST_ADMIN"]}>
+                        <Meetings />
                     </ProtectedRoute>
                 }
             />

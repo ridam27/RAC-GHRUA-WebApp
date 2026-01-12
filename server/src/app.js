@@ -58,3 +58,6 @@ app.use("/api/event-history", eventHistoryRoutes);
 
 const userStatsRoutes = require("./routes/userstats.routes");
 app.use("/api/stats", userStatsRoutes);
+
+const inpersonRoutes = require("./routes/inperson.routes");
+app.use("/api/inperson", inpersonRoutes);

@@ -9,7 +9,8 @@ import {
     Calendar,
     History,
     Settings,
-    Users
+    Users,
+    MapPin
 } from "lucide-react";
 
 export default function Navbar() {
@@ -36,20 +37,31 @@ export default function Navbar() {
         <>
             {/* ================= DESKTOP NAVBAR ================= */}
             <nav className="hidden md:flex fixed top-4 left-6 right-6 z-50 bg-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg justify-between items-center">
-                <div className="font-semibold text-lg">
+                <Link
+                    to="/login"
+                    className="font-semibold text-lg"
+                >
                     Rotaract Club of GHRUA
-                </div>
+                </Link>
 
                 <div className="flex items-center gap-6 text-sm relative">
                     <Link to="/dashboard" className={desktopLink}>Dashboard</Link>
-                    <Link to="/events" className={desktopLink}>Events</Link>
+                    <Link to="/events" className={desktopLink}>Online Events</Link>
 
                     {["ADMIN", "ASST_ADMIN"].includes(user?.system_role) && (
                         <Link to="/event-history" className={desktopLink}>Event History</Link>
                     )}
 
+                    {["ADMIN", "ASST_ADMIN"].includes(user?.system_role) && (
+                        <Link to="/inp-events" className={desktopLink}>InPerson Events</Link>
+                    )}
+
+                    {["ADMIN", "ASST_ADMIN"].includes(user?.system_role) && (
+                        <Link to="/meetings" className={desktopLink}>Manage Meetings</Link>
+                    )}
+
                     {user?.system_role === "ASST_ADMIN" && (
-                        <Link to="/asst-admin" className={desktopLink}>Manage Events</Link>
+                        <Link to="/asst-admin" className={desktopLink}>Manage MD Events</Link>
                     )}
 
                     {user?.system_role === "ADMIN" && (
@@ -85,7 +97,12 @@ export default function Navbar() {
 
             {/* ================= MOBILE NAVBAR ================= */}
             <nav className="md:hidden fixed top-0 left-0 right-0 z-50 bg-blue-600 text-white px-4 py-3 flex justify-between items-center">
-                <div className="font-semibold text-lg">RAC GHRUA</div>
+                <Link
+                    to="/login"
+                    className="font-semibold text-lg"
+                >
+                    RAC GHRUA
+                </Link>
 
                 <div className="flex items-center gap-3">
                     <div className="relative">
@@ -128,9 +145,8 @@ export default function Navbar() {
 
             {/* ================= SLIDING MOBILE MENU ================= */}
             <div
-                className={`md:hidden fixed top-0 right-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 ${
-                    menuOpen ? "translate-x-0" : "translate-x-full"
-                }`}
+                className={`md:hidden fixed top-0 right-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "translate-x-full"
+                    }`}
             >
                 {/* HEADER */}
                 <div className="flex justify-between items-center px-6 py-5 bg-blue-600 text-white">
@@ -147,7 +163,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link to="/events" className={mobileLink} onClick={closeMobileMenu}>
-                        <Calendar size={22} /> Events
+                        <Calendar size={22} />Online Events
                     </Link>
 
                     {["ADMIN", "ASST_ADMIN"].includes(user?.system_role) && (
@@ -156,9 +172,21 @@ export default function Navbar() {
                         </Link>
                     )}
 
+                    {["ADMIN", "ASST_ADMIN"].includes(user?.system_role) && (
+                        <Link to="/inp-events" className={mobileLink} onClick={closeMobileMenu}>
+                            <MapPin size={22} />InPerson Events
+                        </Link>
+                    )}
+
+                    {["ADMIN", "ASST_ADMIN"].includes(user?.system_role) && (
+                        <Link to="/meetings" className={mobileLink} onClick={closeMobileMenu}>
+                            <Users size={22} />Manage Meetings
+                        </Link>
+                    )}
+
                     {user?.system_role === "ASST_ADMIN" && (
                         <Link to="/asst-admin" className={mobileLink} onClick={closeMobileMenu}>
-                            <Settings size={22} /> Manage Events
+                            <Settings size={22} /> Manage MD Events
                         </Link>
                     )}
 
@@ -170,7 +198,7 @@ export default function Navbar() {
                 </div>
 
                 {/* FOOTER CREDIT */}
-                <div className="absolute bottom-4 left-4 right-4 bg-gray-50 rounded-full px-4 py-2 shadow text-center">
+                <div className="absolute bottom-10 left-4 right-4 bg-gray-50 rounded-full px-4 py-2 shadow text-center">
                     <p className="text-xs text-gray-600">
                         Crafted with ❤️ by{" "}
                         <a
