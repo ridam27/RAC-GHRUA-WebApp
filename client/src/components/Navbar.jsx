@@ -36,7 +36,7 @@ export default function Navbar() {
     return (
         <>
             {/* ================= DESKTOP NAVBAR ================= */}
-            <nav className="hidden md:flex fixed top-4 left-6 right-6 z-50 bg-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg justify-between items-center">
+            <nav className="hidden md:flex fixed top-4 left-20 right-20 z-50 bg-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg justify-between items-center">
                 <Link
                     to="/login"
                     className="font-semibold text-lg"
@@ -96,7 +96,7 @@ export default function Navbar() {
             </nav>
 
             {/* ================= MOBILE NAVBAR ================= */}
-            <nav className="md:hidden fixed top-0 left-0 right-0 z-50 bg-blue-600 text-white px-4 py-3 flex justify-between items-center">
+            <nav className="md:hidden fixed top-2 left-2 right-2 z-50 bg-blue-600 text-white px-4 py-3 flex rounded-2xl shadow-lg justify-between items-center">
                 <Link
                     to="/login"
                     className="font-semibold text-lg"

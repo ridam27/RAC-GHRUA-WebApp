@@ -284,7 +284,7 @@ function ContactAdminCard() {
                                 transition transform hover:-translate-y-0.5"
                 >
                     <MessageCircle size={18} />
-                    <span className="text-sm font-medium hidden sm:inline">
+                    <span className="text-sm font-medium sm:inline">
                         WhatsApp
                     </span>
                 </a>
@@ -299,7 +299,7 @@ function ContactAdminCard() {
                                 transition transform hover:-translate-y-0.5"
                 >
                     <Mail size={18} />
-                    <span className="text-sm font-medium hidden sm:inline">
+                    <span className="text-sm font-medium sm:inline">
                         Email
                     </span>
                 </a>
