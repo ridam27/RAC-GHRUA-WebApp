@@ -19,6 +19,15 @@ A full-stack web application to manage members, events, attendance, and certific
 
 ## Features
 
+### Authentication
+
+- **User Signup**: New users can create accounts with name, email, mobile, date of birth, university, and password.  
+- **User Login**: Secure authentication using JWT tokens.  
+- **Password Validation**: Password confirmation and secure hashing.  
+- **Email/Mobile Uniqueness**: Prevents duplicate accounts.  
+
+---
+
 ### User Roles
 
 - **Admin**: View and manage everything. Assign club roles, update club fee status, view all registered members, access all dashboards.  
@@ -39,10 +48,19 @@ A full-stack web application to manage members, events, attendance, and certific
 ### Events Management
 
 - **Create events** (by Asst. Admin).  
-- **Register for events** (`I’m In` / `I’m Out`).  
+- **Register for events** (`I'm In` / `I'm Out`).  
 - View **upcoming and completed events**. (by Admin and Asst.Admin) 
 - Upload **joining links** (visible to registered attendees).  
 - Mark events **complete** after conclusion.  
+
+---
+
+### In-Person Events & Meetings
+
+- **In-Person Events**: Admin and Asst. Admin can create, view, and delete in-person events with event name, date, and start time.  
+- **Meetings**: Admin and Asst. Admin can schedule, view, and delete club meetings with title, date, and start time.  
+- Both features display creator information and support full CRUD operations.  
+- Responsive card-based UI for easy management.  
 
 ---
 
@@ -66,6 +84,17 @@ A full-stack web application to manage members, events, attendance, and certific
 
 ---
 
+### User Statistics
+
+- **Attendance Statistics**: Admin and Asst. Admin can view comprehensive user attendance statistics.  
+- **Metrics Displayed**: Total registered events, attended events, missed events, and attendance percentage per user.  
+- **Date Filtering**: Filter statistics by date range (from/to dates).  
+- **Excel Export**: Export user attendance statistics to Excel with all metrics.  
+- **Visual Indicators**: Color-coded attendance percentages (green ≥75%, yellow ≥50%, red <50%).  
+- **Responsive Design**: Desktop table view and mobile card view for optimal viewing on all devices.  
+
+---
+
 ### Dashboards
 
 - **Member Dashboard**: View attendance stats, number of events attended, registered but not attended.  
@@ -84,7 +113,7 @@ A full-stack web application to manage members, events, attendance, and certific
 
 - **Frontend**: React, Tailwind CSS, React Router DOM, Axios, react-hot-toast  
 - **Backend**: Node.js, Express.js  
-- **Database**: PostgreSQL (Supabase optional)  
+- **Database**: PostgreSQL (Supabase preferred)  
 - **Authentication**: JWT Tokens  
 - **Excel Export**: ExcelJS  
 - **Deployment**: Free hosting options (Railway, Render, or Supabase for backend and database, Netlify/Vercel for frontend)  
@@ -146,6 +175,7 @@ EMAIL_PASS=password
 ## Backend API Routes
 | Method | Endpoint                                | Description                | Roles              |
 | ------ | --------------------------------------- | -------------------------- | ------------------ |
+| POST   | /api/auth/signup                        | Signup new user            | All                |
 | POST   | /api/auth/login                         | Login user                 | All                |
 | GET    | /api/users                              | Get all users              | ADMIN              |
 | PUT    | /api/users/:id                          | Update user                | ADMIN / Self       |
@@ -157,11 +187,20 @@ EMAIL_PASS=password
 | GET    | /api/event-history                      | Event history              | ADMIN / ASST_ADMIN |
 | GET    | /api/event-history/export               | Export event history Excel | ADMIN / ASST_ADMIN |
 | PUT    | /api/event-history/:eventId/certificate | Update certificate status  | ADMIN / ASST_ADMIN |
+| GET    | /api/stats                              | Get user attendance stats  | ADMIN / ASST_ADMIN |
+| GET    | /api/stats/export                       | Export user stats Excel    | ADMIN / ASST_ADMIN |
+| GET    | /api/inperson/inpevents                 | Get in-person events       | All                |
+| POST   | /api/inperson/inpevents                 | Create in-person event     | ADMIN / ASST_ADMIN |
+| DELETE | /api/inperson/inpevents/:id             | Delete in-person event     | ADMIN / ASST_ADMIN |
+| GET    | /api/inperson/meetings                  | Get meetings               | All                |
+| POST   | /api/inperson/meetings                  | Create meeting             | ADMIN / ASST_ADMIN |
+| DELETE | /api/inperson/meetings/:id              | Delete meeting             | ADMIN / ASST_ADMIN |
 
 ## Frontend Routes
 | Route                  | Component          | Roles              |
 | ---------------------- | ------------------ | ------------------ |
 | /login                 | Login              | All                |
+| /signup                | Signup             | All                |
 | /dashboard/member      | MemberDashboard    | MEMBER             |
 | /dashboard/asst-admin  | AsstAdminDashboard | ASST_ADMIN / ADMIN |
 | /dashboard/admin       | AdminDashboard     | ADMIN              |
@@ -172,6 +211,9 @@ EMAIL_PASS=password
 | /profile               | Profile            | All                |
 | /admin/members         | AdminMembers       | ADMIN              |
 | /event-history         | EventHistory       | ADMIN / ASST_ADMIN |
+| /user-stats            | UserStats          | ADMIN / ASST_ADMIN |
+| /inp-events            | InpEvents          | ADMIN / ASST_ADMIN |
+| /meetings              | Meetings           | ADMIN / ASST_ADMIN |
 
 ## License
 This project is for Rotaract Club of GHRUA internal use and is not licensed publicly.
