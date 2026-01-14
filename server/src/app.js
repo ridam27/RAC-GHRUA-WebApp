@@ -31,6 +31,10 @@ app.get("/", (req, res) => {
     res.send("RAC GHRUA Backend Running 🚀");
 });
 
+app.get("/health", (req, res) => {
+    res.status(200).send("OK");
+});
+
 module.exports = app;
 
 const eventRoutes = require("./routes/event.routes");

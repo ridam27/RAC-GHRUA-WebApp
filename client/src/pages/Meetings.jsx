@@ -53,18 +53,25 @@ export default function Meetings() {
             <div className="max-w-7xl mx-auto p-6 space-y-6">
 
                 {/* Header */}
-                <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-semibold text-gray-800 flex items-center gap-2">
+                <div className="flex items-center justify-between gap-3 flex-nowrap">
+                    <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 flex items-center gap-2 min-w-0 whitespace-nowrap">
                         <Users className="text-emerald-600" />
                         Meetings
                     </h1>
 
                     <button
                         onClick={() => setOpen(true)}
-                        className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-700 transition"
+                        className="flex items-center gap-2
+                        bg-emerald-600 text-white
+                        px-3 py-2 sm:px-4
+                        rounded-lg shadow
+                        hover:bg-emerald-700 transition
+                        whitespace-nowrap shrink-0"
                     >
-                        <Plus size={18} /> Schedule Meeting
+                        <Plus size={18} />
+                        <span className="hidden sm:inline">Schedule Meeting</span>
                     </button>
+
                 </div>
 
                 {/* Meetings Grid */}
