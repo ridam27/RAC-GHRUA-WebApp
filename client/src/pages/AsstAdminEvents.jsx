@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import toast from "react-hot-toast";
 import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AsstAdminEvents() {
     const [events, setEvents] = useState([]);
@@ -12,6 +13,8 @@ export default function AsstAdminEvents() {
         description: "",
         event_date: ""
     });
+
+    const navigate = useNavigate();
 
     const loadEvents = async () => {
         const res = await api.get("/events");
@@ -141,8 +144,8 @@ export default function AsstAdminEvents() {
 
                                     <span
                                         className={`text-xs px-2 py-1 rounded ${e.is_completed
-                                                ? "bg-green-600 text-white"
-                                                : "bg-yellow-400 text-black"
+                                            ? "bg-green-600 text-white"
+                                            : "bg-yellow-400 text-black"
                                             }`}
                                     >
                                         {e.is_completed ? "Completed" : "Upcoming"}
@@ -172,8 +175,8 @@ export default function AsstAdminEvents() {
                                             }
                                             disabled={loadingId === e.id}
                                             className={`px-3 py-2 rounded text-sm text-white ${loadingId === e.id
-                                                    ? "bg-gray-400"
-                                                    : "bg-blue-600"
+                                                ? "bg-gray-400"
+                                                : "bg-blue-600"
                                                 }`}
                                         >
                                             {loadingId === e.id
@@ -185,20 +188,34 @@ export default function AsstAdminEvents() {
 
                                 {/* ACTIONS */}
                                 <div className="flex justify-between items-center">
-                                    <a
-                                        href={`/asst-admin/events/${e.id}`}
-                                        className="text-blue-600 underline text-sm"
+                                    <button
+                                        onClick={() => navigate(`/asst-admin/events/${e.id}`)}
+                                        className="
+                                        inline-flex items-center gap-2
+                                        px-4 py-2
+                                        rounded-xl
+                                        text-sm font-medium
+                                        text-white
+                                        bg-linear-to-r from-emerald-500 to-blue-600
+                                        shadow-md
+                                        hover:from-emerald-600 hover:to-blue-700
+                                        hover:shadow-lg
+                                        transition-all duration-200
+                                        focus:outline-none focus:ring-2 focus:ring-emerald-400
+                                    "
                                     >
                                         Manage Attendance
-                                    </a>
+                                    </button>
+
+
 
                                     {!e.is_completed && (
                                         <button
                                             onClick={() => completeEvent(e.id)}
                                             disabled={loadingId === e.id}
                                             className={`px-3 py-1 rounded text-sm text-white ${loadingId === e.id
-                                                    ? "bg-gray-400"
-                                                    : "bg-red-600"
+                                                ? "bg-gray-400"
+                                                : "bg-red-600"
                                                 }`}
                                         >
                                             {loadingId === e.id

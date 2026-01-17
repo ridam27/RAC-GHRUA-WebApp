@@ -1,6 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Menu,
     X,
@@ -19,6 +19,18 @@ export default function Navbar() {
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+
+    useEffect(() => {
+        if (menuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [menuOpen]);
 
     const handleLogout = () => {
         logout();
@@ -138,7 +150,7 @@ export default function Navbar() {
             {/* ================= BACKDROP ================= */}
             {menuOpen && (
                 <div
-                    className="md:hidden fixed inset-0 bg-black/40 z-40"
+                    className="md:hidden fixed inset-0 bg-black/40 z-50"
                     onClick={closeMobileMenu}
                 />
             )}
