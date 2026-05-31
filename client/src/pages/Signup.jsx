@@ -173,6 +173,15 @@ export default function Signup() {
                         >
                             Ridam Satkar
                         </a>
+                        and
+                        <a
+                            href="https://instagram.com/pranay.1206"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-gray-800 hover:text-red-600 transition"
+                        >
+                            Pranay Kharbade
+                        </a>
                     </p>
                 </div>
 

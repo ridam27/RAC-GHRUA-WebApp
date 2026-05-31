@@ -163,7 +163,7 @@ export default function AsstAdminDashboard() {
                 {/* ❤️ FOOTER */}
                 <div className="bg-white rounded-2xl shadow p-4 flex flex-col md:flex-row items-center justify-between gap-3">
                     <p className="text-sm text-gray-600">
-                        Crafted with ❤️ by <span className="font-medium text-red-700">Ridam Satkar</span>
+                        Crafted with ❤️ by <span className="font-medium text-red-700">Ridam Satkar</span> and <span className="font-medium text-red-700">Pranay Kharbade</span>
                     </p>
 
                     <div className="flex gap-4">
